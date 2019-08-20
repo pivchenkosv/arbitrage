@@ -1,0 +1,78 @@
+version: "3"
+services:
+  app:
+    image: arbitrage-app
+    container_name: arbitrage-web
+    build:
+      context: ""
+      dockerfile: Dockerfile
+    depends_on:
+      - redis
+      - mongodb
+    ports:
+      - 8080:80
+    volumes:
+      - .:/var/www/html
+    environment:
+      APP_ENV: local
+      CONTAINER_ROLE: app
+      CACHE_DRIVER: redis
+      SESSION_DRIVER: redis
+      QUEUE_DRIVER: redis
+      REDIS_HOST: redis
+      DB_CONNECTION: mongodb
+      DB_HOST: mongodb
+      DB_PORT: 27017
+      DB_DATABASE: arbitrage
+      DB_USERNAME: arbitrage
+      DB_PASSWORD: secret
+
+  scheduler:
+    image: arbitrage-app
+    container_name: arbitrage-scheduler
+    depends_on:
+      - app
+    volumes:
+      - .:/var/www/html
+    environment:
+      APP_ENV: local
+      CONTAINER_ROLE: scheduler
+      CACHE_DRIVER: redis
+      SESSION_DRIVER: redis
+      QUEUE_DRIVER: redis
+      REDIS_HOST: redis
+
+  queue:
+    image: arbitrage-app
+    container_name: arbitrage-queue
+    depends_on:
+      - app
+    volumes:
+      - .:/var/www/html
+    environment:
+      APP_ENV: local
+      CONTAINER_ROLE: queue
+      CACHE_DRIVER: redis
+      SESSION_DRIVER: redis
+      QUEUE_DRIVER: redis
+      REDIS_HOST: redis
+
+  redis:
+    container_name: arbitrage-redis
+    image: redis:4-alpine
+    ports:
+      - 16379:6379
+    volumes:
+      - redis:/data
+
+  mongodb:
+    container_name: arbitrage-mongodb
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+
+volumes:
+  redis:
+    driver: "local"
+  mysql:
+    driver: "local"
