@@ -5,7 +5,7 @@ services:
     container_name: arbitrage-web
     build:
       context: ""
-      dockerfile: Dockerfile
+      dockerfile: docker/Dockerfile
     depends_on:
       - redis
       - mongodb
