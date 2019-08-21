@@ -8,11 +8,13 @@ services:
       dockerfile: docker/Dockerfile
     depends_on:
       - redis
-      - mongodb
+      - mongo
     ports:
       - 8080:80
     volumes:
       - .:/var/www/html
+    links:
+      - mongo
     environment:
       APP_ENV: local
       CONTAINER_ROLE: app
@@ -21,7 +23,7 @@ services:
       QUEUE_DRIVER: redis
       REDIS_HOST: redis
       DB_CONNECTION: mongodb
-      DB_HOST: mongodb
+      DB_HOST: mongo
       DB_PORT: 27017
       DB_DATABASE: arbitrage
       DB_USERNAME: arbitrage
@@ -65,11 +67,15 @@ services:
     volumes:
       - redis:/data
 
-  mongodb:
+  mongo:
     container_name: arbitrage-mongodb
     image: mongo:latest
     ports:
       - "27017:27017"
+    environment:
+      MONGO_INITDB_DATABASE: arbitrage
+      MONGO_INITDB_ROOT_USERNAME: arbitrage
+      MONGO_INITDB_ROOT_PASSWORD: secret
 
 volumes:
   redis:
