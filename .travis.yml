@@ -11,7 +11,7 @@ before_script:
   - sudo /etc/init.d/postgresql stop
 script:
   - docker ps -a
-  - docker exec -it laravel-www make generate-key
-  - docker exec -it laravel-www make lint
-  - docker exec -it laravel-www make migration
-  - docker exec -it laravel-www make test
+  - docker exec -it arbitrage-web make generate-key
+  - docker exec -it arbitrage-web make lint
+  - docker exec -it arbitrage-web make migration
+  - docker exec -it arbitrage-web make test
