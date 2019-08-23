@@ -4,8 +4,6 @@ php:
 before_install:
   - make build
   - docker ps -a
-install:
-  - composer install
 services:
   - docker
 before_script:
