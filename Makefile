@@ -12,3 +12,4 @@ generate-key:
 	composer run post-autoload-dump
 	composer run post-root-package-install
 	composer run post-create-project-cmd
+	php artisan config:cache

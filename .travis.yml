@@ -8,7 +8,6 @@ services:
   - docker
 before_script:
   - cp .env.travis .env
-  - sudo /etc/init.d/postgresql stop
 script:
   - docker ps -a
   - docker exec -it arbitrage-web make generate-key
