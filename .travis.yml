@@ -1,17 +1,19 @@
 language: php
 php:
-- '7.3'
+  - '7.3'
+before_install:
+  - make build
+  - docker ps -a
 install:
-- composer install
+  - composer install
 services:
-- docker
+  - docker
 before_script:
-- cp .env.travis .env
-- sudo /etc/init.d/postgresql stop
+  - cp .env.travis .env
+  - sudo /etc/init.d/postgresql stop
 script:
-- make build
-- docker ps -a
-- docker exec -it laravel-www make generate-key
-- docker exec -it laravel-www make lint
-- docker exec -it laravel-www make migration
-- docker exec -it laravel-www make test
+  - docker ps -a
+  - docker exec -it laravel-www make generate-key
+  - docker exec -it laravel-www make lint
+  - docker exec -it laravel-www make migration
+  - docker exec -it laravel-www make test
