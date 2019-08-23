@@ -12,5 +12,6 @@ script:
   - docker ps -a
   - docker exec -it arbitrage-web make generate-key
   - docker exec -it arbitrage-web make lint
+  - sleep 15
   - docker exec -it arbitrage-web make migration
   - docker exec -it arbitrage-web make test
