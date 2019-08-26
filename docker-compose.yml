@@ -12,7 +12,7 @@ services:
     ports:
       - 8080:80
     volumes:
-      - .:/var/www/html
+      - .:/var/www
     links:
       - mongo
     environment:
@@ -35,7 +35,7 @@ services:
     depends_on:
       - app
     volumes:
-      - .:/var/www/html
+      - .:/var/www
     environment:
       APP_ENV: local
       CONTAINER_ROLE: scheduler
@@ -50,7 +50,7 @@ services:
     depends_on:
       - app
     volumes:
-      - .:/var/www/html
+      - .:/var/www
     environment:
       APP_ENV: local
       CONTAINER_ROLE: queue
@@ -76,6 +76,9 @@ services:
       MONGO_INITDB_DATABASE: arbitrage
       MONGO_INITDB_ROOT_USERNAME: arbitrage
       MONGO_INITDB_ROOT_PASSWORD: secret
+    volumes:
+      - /docker/data:/data/db
+      - ./docker/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
 
 volumes:
   redis:
