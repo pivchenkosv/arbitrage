@@ -16,8 +16,7 @@ class CreateOrdersTable extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->foreign('instance_id')->references('id')->on('instances');
-            $table->string('first_currency');
-            $table->string('second_currency');
+            $table->foreign('pair_id')->references('id')->on('pairs');
             $table->string('type');
             $table->unsignedDecimal('rate', 16, 9);
             $table->unsignedInteger('quantity')->nullable();
