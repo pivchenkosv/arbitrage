@@ -5,25 +5,27 @@ namespace App\Services\Exmo;
 
 
 use App\Models\Order;
-use App\Services\Instance;
+use App\Models\Instance;
+use App\Services\Instance as ExchangeInstance;
 use GuzzleHttp\Client;
-use Psy\Util\Json;
 
-class ExmoInstance extends Instance
+class ExmoInstance extends ExchangeInstance
 {
     protected $uri = "https://api.exmo.com/v1/";
 
     public function fetchOrders($pair = "BTC_USD")
     {
-        // TODO: Implement fetchOrders() method.
         $client = new Client([
             'base_uri' => $this->uri,
         ]);
 
-        $response = $client->request('GET', "order_book/?pair=$pair");
+        $response = $client->get("order_book/?pair=$pair")
+            ->getBody()
+            ->getContents();
+        $response = json_decode($response);
 
-        $this->persistOffers($response->ask, $pair, "Sell");
-        $this->persistOffers($response->bid, $pair, "Buy");
+        $this->persistOffers($response->$pair->ask, $pair, "Sell");
+        $this->persistOffers($response->$pair->bid, $pair, "Buy");
     }
 
     public function acceptOrder()
@@ -35,9 +37,9 @@ class ExmoInstance extends Instance
     {
         foreach ($offers as $offer) {
             $order = new Order();
-            $order->instance_id = "5d63ce5ba409e15f514a9643";
-            $order->first_currency = explode("_" ,$pair)[0];
-            $order->second_currency = explode("_" ,$pair)[1];
+            $order->instance_id = Instance::whereName('Exmo')->first()->id;
+            $order->first_currency = explode("_", $pair)[0];
+            $order->second_currency = explode("_", $pair)[1];
             $order->type = $type;
             $order->rate = $offer[0];
             $order->quantity = $offer[1];
