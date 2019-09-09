@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Jobs\SyncBitmexOrders;
 use App\Jobs\SyncExmoOrders;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
@@ -26,6 +27,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->job(new SyncExmoOrders(), 'redis')->hourly();
+        $schedule->job(new SyncBitmexOrders(), 'redis')->hourly();
         // $schedule->command('inspire')
         //          ->hourly();
     }

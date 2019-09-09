@@ -20,7 +20,12 @@ class ExmoInstance extends ExchangeInstance
         $client = new Client([
             'base_uri' => $this->uri,
         ]);
-        $pairs = Pair::whereIsEnabled(true)->get()->toArray();
+        $pairs = Instance::whereName('Exmo')
+            ->first()
+            ->pairs()
+            ->whereIsEnabled(true)
+            ->get()
+            ->toArray();
         $query = $this->getPairsQuery($pairs);
 
         $response = $client->get("order_book/?pair=$query")

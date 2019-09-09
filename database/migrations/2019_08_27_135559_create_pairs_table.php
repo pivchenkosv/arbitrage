@@ -15,6 +15,7 @@ class CreatePairsTable extends Migration
     {
         Schema::create('pairs', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->foreign('instance_id')->references('id')->on('instances');
             $table->string('first_currency');
             $table->string('second_currency');
             $table->boolean('is_enabled');
