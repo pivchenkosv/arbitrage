@@ -28,8 +28,6 @@ class Kernel extends ConsoleKernel
     {
         $schedule->job(new SyncExmoOrders(), 'redis')->hourly();
         $schedule->job(new SyncBitmexOrders(), 'redis')->hourly();
-        // $schedule->command('inspire')
-        //          ->hourly();
     }
 
     /**

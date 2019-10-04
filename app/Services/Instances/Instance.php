@@ -1,12 +1,12 @@
 <?php
 
 
-namespace App\Services;
+namespace App\Services\Instances;
 
 
 abstract class Instance
 {
     protected $uri;
-    abstract public function fetchOrders();
+    abstract public function fetchOrders($pairs);
     abstract public function acceptOrder();
 }
