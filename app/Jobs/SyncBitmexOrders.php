@@ -13,9 +13,12 @@ use Illuminate\Foundation\Bus\Dispatchable;
 
 class SyncBitmexOrders implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
-    const INSTANCE_NAME = 'Bitmex';
+    private const INSTANCE_NAME = 'Bitmex';
 
     /**
      * Create a new job instance.

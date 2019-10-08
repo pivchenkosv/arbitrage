@@ -1,16 +1,14 @@
 <?php
 
-
 namespace App\Services;
-
 
 use App\Services\Instances\Bitmex\BitmexInstance;
 use App\Services\Instances\Exmo\ExmoInstance;
 
 class InstanceFactoryMethod
 {
-    const EXMO_INSTANCE = 'Exmo';
-    const BITMEX_INSTANCE = 'Bitmex';
+    private const EXMO_INSTANCE = 'Exmo';
+    private const BITMEX_INSTANCE = 'Bitmex';
 
     /**
      * @param string $instance

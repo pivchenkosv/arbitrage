@@ -3,9 +3,9 @@ build:
 test:
 	vendor/bin/phpunit
 lint:
-	./vendor/bin/phpcs -- --standard=PSR12 app tests
+	./vendor/bin/phpcs -- --standard=PSR12 app/Services app/Jobs tests
 lint-fix:
-	./vendor/bin/phpcbf -- --standard=PSR12 app tests
+	./vendor/bin/phpcbf -- --standard=PSR12 app/Services app/Jobs tests
 migration:
 	php artisan migrate --force
 generate-key:

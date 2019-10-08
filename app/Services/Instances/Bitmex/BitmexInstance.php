@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Services\Instances\Bitmex;
-
 
 use App\Models\Order;
 use App\Services\Instances\Instance;

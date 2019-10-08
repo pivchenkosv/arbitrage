@@ -12,7 +12,6 @@ script:
   - docker ps -a
   - docker exec -it arbitrage-web composer update --no-scripts
   - docker exec -it arbitrage-web make generate-key
-  - docker exec -it arbitrage-web make lint-fix
   - docker exec -it arbitrage-web make lint
   - sleep 15
   - docker exec -it arbitrage-web make migration

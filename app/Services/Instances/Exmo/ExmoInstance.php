@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Services\Instances\Exmo;
-
 
 use App\Models\Order;
 use App\Models\Instance;

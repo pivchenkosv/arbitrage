@@ -14,9 +14,12 @@ use Illuminate\Foundation\Bus\Dispatchable;
 
 class SyncExmoOrders implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
-    const INSTANCE_NAME = 'Exmo';
+    private const INSTANCE_NAME = 'Exmo';
 
     /**
      * Create a new job instance.
