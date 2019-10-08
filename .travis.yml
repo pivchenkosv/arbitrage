@@ -10,7 +10,7 @@ before_script:
   - cp .env.travis .env
 script:
   - docker ps -a
-  - docker exet -it arbitrage-web composer update --no-scripts
+  - docker exec -it arbitrage-web composer update --no-scripts
   - docker exec -it arbitrage-web make generate-key
   - docker exec -it arbitrage-web make lint
   - sleep 15
