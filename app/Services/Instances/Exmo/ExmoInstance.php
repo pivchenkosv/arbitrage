@@ -41,7 +41,7 @@ class ExmoInstance extends ExchangeInstance
 
     private function getPairsQuery($pairs)
     {
-        $concatenate = function($res, $pair) {
+        $concatenate = function ($res, $pair) {
             return $res . ',' . $pair['first_currency'] .
                 $this->delimeter .
                 $pair['second_currency'];
