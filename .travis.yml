@@ -6,11 +6,11 @@ before_install:
   - docker ps -a
 services:
   - docker
-install: composer install
 before_script:
   - cp .env.travis .env
 script:
   - docker ps -a
+  - docker exet -it arbitrage-web composer install
   - docker exec -it arbitrage-web make generate-key
   - docker exec -it arbitrage-web make lint
   - sleep 15
