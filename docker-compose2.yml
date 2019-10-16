@@ -8,13 +8,13 @@ services:
       dockerfile: docker/Dockerfile
     depends_on:
       - redis
-      - postgres
+      - mongo
     ports:
       - 8080:80
     volumes:
       - .:/var/www
     links:
-      - postgres
+      - mongo
     environment:
       APP_ENV: local
       CONTAINER_ROLE: app
@@ -22,9 +22,9 @@ services:
       SESSION_DRIVER: redis
       QUEUE_DRIVER: redis
       REDIS_HOST: redis
-      DB_CONNECTION: pgsql
-      DB_HOST: postgres
-      DB_PORT: 5432
+      DB_CONNECTION: mongodb
+      DB_HOST: mongo
+      DB_PORT: 27017
       DB_DATABASE: arbitrage
       DB_USERNAME: arbitrage
       DB_PASSWORD: secret
@@ -67,18 +67,21 @@ services:
     volumes:
       - redis:/data
 
-  postgres:
-    image: postgres:10
-    container_name: arbitrage-postgres
-    environment:
-      - POSTGRES_USER=arbitrage
-      - POSTGRES_PASSWORD=secret
-      - POSTGRES_DB=arbitrage
+  mongo:
+    container_name: arbitrage-mongodb
+    image: mongo:latest
     ports:
-      - 5432:5432
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_DATABASE: arbitrage
+      MONGO_INITDB_ROOT_USERNAME: arbitrage
+      MONGO_INITDB_ROOT_PASSWORD: secret
     volumes:
-      - /docker/postgres-data:/var/lib/postgresql/data
+      - /docker/data:/data/db
+      - ./docker/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
 
 volumes:
   redis:
+    driver: "local"
+  mysql:
     driver: "local"

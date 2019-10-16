@@ -40,11 +40,20 @@ class ExmoInstance extends ExchangeInstance
     private function getPairsQuery($pairs)
     {
         $concatenate = function ($res, $pair) {
-            return $res . ',' . $pair['first_currency'] .
-                $this->delimeter .
-                $pair['second_currency'];
+            return $res . ',' . $pair['symbol'];
         };
 
         return trim(array_reduce($pairs, $concatenate), ',');
+    }
+
+    public function fetchOrdersFormatted($pairs) {
+        $orders = $this->fetchOrders($pairs);
+
+        foreach ($pairs as $pair) {
+            $key = $pair['symbol'];
+            //TODO: Verify $key existence.
+            $this->persistOffers($orders->$key->ask, $pair, 'Sell');
+            $this->persistOffers($orders->$key->bid, $pair, 'Buy');
+        }
     }
 }

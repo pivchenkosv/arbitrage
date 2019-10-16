@@ -22,7 +22,7 @@ class BitmexInstance extends Instance
 
     public function fetchOrders($pair)
     {
-        $query = $pair['first_currency'] . $pair['second_currency'];
+        $query = $pair['symbol'];
 
         $response = $this->client->get("orderBook/L2?symbol=$query&depth=25")
             ->getBody()

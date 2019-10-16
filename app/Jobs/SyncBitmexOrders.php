@@ -54,16 +54,19 @@ class SyncBitmexOrders implements ShouldQueue
 
     private function persistOrders($offers, $pair)
     {
+        $orders = [];
+        $instance_id = Instance::whereName(self::INSTANCE_NAME)->first()->id;
         foreach ($offers as $offer) {
-            $order = new Order();
-            $order->instance_id = Instance::whereName(self::INSTANCE_NAME)->first()->id;
-            $order->pair_id = $pair['_id'];
-            $order->type = $offer->side;
-            $order->rate = $offer->price;
-            $order->quantity = null;
-            $order->total = $offer->size;
-
-            $order->save();
+            $orders[] = [
+            'instance_id' => $instance_id,
+            'pair_id' => $pair['id'],
+            'type' => $offer->side,
+            'rate' => $offer->price,
+            'quantity' => null,
+            'total' => $offer->size
+            ];
         }
+
+        Order::insert($orders);
     }
 }

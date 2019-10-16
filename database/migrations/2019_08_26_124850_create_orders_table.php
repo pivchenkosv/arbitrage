@@ -15,11 +15,13 @@ class CreateOrdersTable extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->bigInteger('instance_id');
+            $table->bigInteger('pair_id');
             $table->foreign('instance_id')->references('id')->on('instances');
             $table->foreign('pair_id')->references('id')->on('pairs');
             $table->string('type');
             $table->unsignedDecimal('rate', 16, 9);
-            $table->unsignedInteger('quantity')->nullable();
+            $table->unsignedDecimal('quantity')->nullable();
             $table->unsignedDecimal('total', 16, 9);
             $table->timestamps();
         });

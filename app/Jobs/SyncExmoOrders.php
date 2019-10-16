@@ -49,32 +49,28 @@ class SyncExmoOrders implements ShouldQueue
         $orders = $exmo->fetchOrders($pairs);
 
         foreach ($pairs as $pair) {
-            $key = $this->concatenate($pair);
+            $key = $pair['symbol'];
             //TODO: Verify $key existence.
             $this->persistOffers($orders->$key->ask, $pair, 'Sell');
             $this->persistOffers($orders->$key->bid, $pair, 'Buy');
         }
     }
 
-    private function concatenate($pair)
-    {
-        return $pair['first_currency'] .
-            '_' .
-            $pair['second_currency'];
-    }
-
     private function persistOffers($offers, $pair, $type = 'Sell')
     {
+        $orders = [];
+        $instance_id = Instance::whereName(self::INSTANCE_NAME)->first()->id;
         foreach ($offers as $offer) {
-            $order = new Order();
-            $order->instance_id = Instance::whereName(self::INSTANCE_NAME)->first()->id;
-            $order->pair_id = $pair['_id'];
-            $order->type = $type;
-            $order->rate = $offer[0];
-            $order->quantity = $offer[1];
-            $order->total = $offer[2];
-
-            $order->save();
+            $orders[] = [
+                'instance_id' => $instance_id,
+                'pair_id' => $pair['id'],
+                'type' => $type,
+                'rate' => $offer[0],
+                'quantity' => $offer[1],
+                'total' => $offer[2]
+            ];
         }
+
+        Order::insert($orders);
     }
 }
