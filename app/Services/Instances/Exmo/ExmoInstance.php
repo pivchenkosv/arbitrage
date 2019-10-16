@@ -46,7 +46,8 @@ class ExmoInstance extends ExchangeInstance
         return trim(array_reduce($pairs, $concatenate), ',');
     }
 
-    public function fetchOrdersFormatted($pairs) {
+    public function fetchOrdersFormatted($pairs)
+    {
         $orders = $this->fetchOrders($pairs);
 
         foreach ($pairs as $pair) {
