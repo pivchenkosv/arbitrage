@@ -23,12 +23,11 @@ class SyncOrders implements ShouldQueue
     /**
      * Create a new job instance.
      *
-     * @return void
+     * @param $instance
      */
-    public function __construct($instanceName)
+    public function __construct($instance)
     {
-        $instanceFactoryMethod = new InstanceFactoryMethod();
-        $this->instance = $instanceFactoryMethod->getInstance($instanceName);
+        $this->instance = $instance;
     }
 
     /**
@@ -38,37 +37,16 @@ class SyncOrders implements ShouldQueue
      */
     public function handle()
     {
-        $pairs = Instance::whereName($this->instance->name)
+        $instanceFactoryMethod = new InstanceFactoryMethod();
+        $instance = $instanceFactoryMethod->getInstance($this->instance);
+        $pairs = Instance::whereName($this->instance)
             ->first()
             ->pairs()
             ->whereIsEnabled(true)
             ->get()
             ->toArray();
-        $orders = $this->instance->fetchOrders($pairs);
 
-        foreach ($pairs as $pair) {
-            $key = $pair['symbol'];
-            //TODO: Verify $key existence.
-            $this->persistOffers($orders->$key->ask, $pair, 'Sell');
-            $this->persistOffers($orders->$key->bid, $pair, 'Buy');
-        }
-    }
-
-    private function persistOffers($offers, $pair, $type = 'Sell')
-    {
-        $orders = [];
-        $instance_id = Instance::whereName(self::INSTANCE_NAME)->first()->id;
-        foreach ($offers as $offer) {
-            $orders[] = [
-                'instance_id' => $instance_id,
-                'pair_id' => $pair['id'],
-                'type' => $type,
-                'rate' => $offer[0],
-                'quantity' => $offer[1],
-                'total' => $offer[2]
-            ];
-        }
-
+        $orders = $instance->fetchOrdersFormatted($pairs);
         Order::insert($orders);
     }
 }

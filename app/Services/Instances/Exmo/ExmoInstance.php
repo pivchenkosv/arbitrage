@@ -2,17 +2,14 @@
 
 namespace App\Services\Instances\Exmo;
 
-use App\Models\Order;
-use App\Models\Instance;
-use App\Models\Pair;
-use App\Services\Instances\Instance as ExchangeInstance;
+use App\Models\Instance as ModelInstance;
+use App\Services\Instances\Instance;
 use GuzzleHttp\Client;
 
-class ExmoInstance extends ExchangeInstance
+class ExmoInstance extends Instance
 {
     public $name = 'Exmo';
     protected $uri = 'https://api.exmo.com/v1/';
-    protected $delimeter = '_';
     private $client;
 
     public function __construct()
@@ -24,9 +21,7 @@ class ExmoInstance extends ExchangeInstance
 
     public function fetchOrders($pairs)
     {
-        $query = $this->getPairsQuery($pairs);
-
-        $response = $this->client->get("order_book/?pair=$query")
+        $response = $this->client->get("order_book/?pair=$pairs")
             ->getBody()
             ->getContents();
         return json_decode($response);
@@ -43,18 +38,45 @@ class ExmoInstance extends ExchangeInstance
             return $res . ',' . $pair['symbol'];
         };
 
-        return trim(array_reduce($pairs, $concatenate), ',');
+        return trim(array_reduce($pairs, $concatenate, ','));
     }
 
     public function fetchOrdersFormatted($pairs)
     {
-        $orders = $this->fetchOrders($pairs);
+        $orders = $this->fetchOrders($this->getPairsQuery($pairs));
+        $formattedOrders = [];
+        $instance_id = ModelInstance::whereName($this->name)->first()->id;
 
         foreach ($pairs as $pair) {
             $key = $pair['symbol'];
             //TODO: Verify $key existence.
-            $this->persistOffers($orders->$key->ask, $pair, 'Sell');
-            $this->persistOffers($orders->$key->bid, $pair, 'Buy');
+            $formattedOrders = array_merge(
+                $formattedOrders,
+                $this->formatOrders($orders->$key->ask, $instance_id, $pair['id'], 'Sell')
+            );
+            $formattedOrders = array_merge(
+                $formattedOrders,
+                $this->formatOrders($orders->$key->bid, $instance_id, $pair['id'], 'Buy')
+            );
         }
+
+        return $formattedOrders;
+    }
+
+    private function formatOrders($offers, $instance_id, $pairId, $type = 'Sell')
+    {
+        $orders = [];
+        foreach ($offers as $offer) {
+            $orders[] = [
+                'instance_id' => $instance_id,
+                'pair_id' => $pairId,
+                'type' => $type,
+                'rate' => $offer[0],
+                'quantity' => $offer[1],
+                'total' => $offer[2]
+            ];
+        }
+
+        return $orders;
     }
 }

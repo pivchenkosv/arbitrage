@@ -5,6 +5,7 @@ namespace App\Console;
 use App\Jobs\DeleteLegacyOrders;
 use App\Jobs\SyncBitmexOrders;
 use App\Jobs\SyncExmoOrders;
+use App\Jobs\SyncOrders;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -28,8 +29,8 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->job(new DeleteLegacyOrders(), 'redis')->hourly();
-        $schedule->job(new SyncExmoOrders(), 'redis')->hourly();
-        $schedule->job(new SyncBitmexOrders(), 'redis')->hourly();
+        $schedule->job(new SyncOrders('Exmo'), 'redis')->hourly();
+        $schedule->job(new SyncOrders('Bitmex'), 'redis')->hourly();
     }
 
     /**
