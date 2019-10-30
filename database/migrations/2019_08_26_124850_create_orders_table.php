@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
@@ -23,7 +24,7 @@ class CreateOrdersTable extends Migration
             $table->unsignedDecimal('rate', 16, 9);
             $table->unsignedDecimal('quantity')->nullable();
             $table->unsignedDecimal('total', 16, 9);
-            $table->timestamps();
+            $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP(0)'));
         });
     }
 
