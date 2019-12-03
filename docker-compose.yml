@@ -8,26 +8,26 @@ services:
       dockerfile: docker/Dockerfile
     depends_on:
       - redis
-      - postgres
+      - db
     ports:
       - 8080:80
     volumes:
       - .:/var/www
     links:
-      - postgres
+      - db
     environment:
-      APP_ENV: local
+      APP_ENV: ${APP_ENV}
       CONTAINER_ROLE: app
       CACHE_DRIVER: redis
       SESSION_DRIVER: redis
       QUEUE_DRIVER: redis
       REDIS_HOST: redis
       DB_CONNECTION: pgsql
-      DB_HOST: postgres
-      DB_PORT: 5432
-      DB_DATABASE: arbitrage
-      DB_USERNAME: arbitrage
-      DB_PASSWORD: secret
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_DATABASE: ${DB_DATABASE}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
 
   scheduler:
     image: arbitrage-app
@@ -67,13 +67,13 @@ services:
     volumes:
       - redis:/data
 
-  postgres:
+  db:
     image: postgres:10
     container_name: arbitrage-postgres
     environment:
-      - POSTGRES_USER=arbitrage
-      - POSTGRES_PASSWORD=secret
-      - POSTGRES_DB=arbitrage
+      - POSTGRES_USER=${DB_USERNAME}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_DATABASE}
     ports:
       - 5432:5432
     volumes:

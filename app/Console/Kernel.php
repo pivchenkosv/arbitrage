@@ -28,9 +28,9 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->job(new DeleteLegacyOrders(), 'redis')->hourly();
-        $schedule->job(new SyncOrders('Exmo'), 'redis')->hourly();
-        $schedule->job(new SyncOrders('Bitmex'), 'redis')->hourly();
+//        $schedule->job(new DeleteLegacyOrders(), 'redis')->hourly();
+//        $schedule->job(new SyncOrders('Exmo'), 'redis')->everyMinute();
+//        $schedule->job(new SyncOrders('Bitmex'), 'redis')->hourly();
     }
 
     /**
