@@ -35,5 +35,13 @@ class PairsSeeder extends Seeder
             'symbol' => 113,
             'is_enabled' => true,
         ]);
+        DB::table('pairs')->insert([
+            'instance_id' => 1,
+            'name' => 'ETH_USD',
+            'first_currency' => 'ETH',
+            'second_currency' => 'USD',
+            'symbol' => 'ETH_USD',
+            'is_enabled' => true,
+        ]);
     }
 }
